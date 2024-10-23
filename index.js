@@ -11,6 +11,9 @@ switch (command) {
   case "make-file":
     app.makeFile();
     break;
+  case "read-file":
+    app.readFile();
+    break;
 
   default:
     throw Error("Invalid command");
