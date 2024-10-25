@@ -9,7 +9,7 @@
     "make-file": "node index.js make-file",
     "ext-sorter": "node index.js ext-sorter",
     "read-file": "node index.js read-file",
-    "read-folder": ""
+    "read-folder": "node index.js read-folder"
   },
   "keywords": [],
   "author": "",

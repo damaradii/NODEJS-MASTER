@@ -88,8 +88,46 @@ app.extSorter = () => {
       console.log("tidak ada file");
     }
   }
-
   rl.close();
+};
+
+app.readFolder = () => {
+  rl.question("Masukan Nama Folder: ", (folderName) => {
+    const res = fs.readdirSync(folderName);
+    const output = [];
+
+    for (let i = 0; i < res.length; i++) {
+      const element = res[i];
+      const fileExtensi = path.extname(element);
+      const namaFile = path.basename(element, fileExtensi);
+      const stat = fs.statSync(__dirname + `/${folderName}/` + element);
+      // untuk jenis gambar
+      let jenis;
+      if (image.includes(fileExtensi)) {
+        jenis = "gambar";
+      } else if (text.includes(fileExtensi)) {
+        jenis = "text";
+      }
+      // untuk ukuran file
+      let ukuran;
+      if (stat.size < 1000000) {
+        ukuran = `${stat.size / 1000} kb`;
+      } else {
+        ukuran = `${stat.size / 1000000} mb`;
+      }
+      try {
+        output.push({
+          namaFile: namaFile,
+          extensi: fileExtensi,
+          jenisFile: jenis,
+          tanggalDibuat: stat.birthtime,
+          ukuranFile: ukuran,
+        });
+      } catch (error) {}
+    }
+    console.log(output);
+    rl.close();
+  });
 };
 
 module.exports = app;
