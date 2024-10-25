@@ -8,6 +8,8 @@ const rl = readline.createInterface({
 });
 
 const app = {};
+const image = [".jpg", ".png", ".jpeg"];
+const text = [".txt", ".md"];
 
 // contoh script pembuatan folder
 app.makeFolder = () => {
@@ -21,32 +23,73 @@ app.makeFolder = () => {
 
 app.makeFile = () => {
   rl.question("Masukan Nama File : ", (fileName) => {
-    fs.writeFile(__dirname + `/${fileName}`, "", () => {
-      console.log("Berhasil membuat file baru");
+    rl.question("Masukan Nama Extensi : ", (ExtName) => {
+      fs.writeFile(__dirname + `/${fileName}.${ExtName}`, "", () => {
+        console.log("Berhasil membuat file baru");
+      });
+      rl.close();
     });
-    rl.close();
   });
 };
 
 app.readFile = () => {
-  const image = [".png", ".jpg", ".jpeg"];
+  rl.question(
+    "Masukan Nama Folder (kosongkan jika tidak berada di sub-folder): ",
+    (folderName) => {
+      rl.question("Masukan Nama File : ", (fileName) => {
+        const fileExtensi = path.extname(fileName);
+        if (image.includes(fileExtensi)) {
+          console.log("format file tidak di dukung");
+          rl.close();
+          return;
+        }
+        try {
+          const filePath = path.join(__dirname, folderName + `/${fileName}`);
+          const data = fs.readFileSync(filePath, "utf8");
+          console.log(data);
+        } catch (err) {
+          console.error(err.message);
+        }
+        rl.close();
+      });
+    }
+  );
+};
 
-  rl.question("Masukan Nama File : ", (fileName) => {
-    const fileExtension = path.extname(fileName);
-    if (image.includes(fileExtension)) {
-      console.log("format file tidak di dukung");
-      rl.close();
-      return;
+app.extSorter = () => {
+  const folder = "unorganize_folder";
+  const sorter = fs.readdirSync(folder);
+  for (let i = 0; i < sorter.length; i++) {
+    const file = sorter[i];
+    const ext = path.extname(file);
+    if (image.includes(ext)) {
+      fs.mkdir(__dirname + `/image`, () => {
+        console.log("Berhasil Membuat Folder");
+      });
+      fs.rename(
+        __dirname + "/unorganize_folder/" + file,
+        __dirname + "/image/" + file,
+        (err) => {
+          if (err) console.error("Gagal memindahkan file:", err);
+        }
+      );
+    } else if (text.includes(ext)) {
+      fs.mkdir(__dirname + `/text`, () => {
+        console.log("Berhasil Membuat Folder");
+      });
+      fs.rename(
+        __dirname + "/unorganize_folder/" + file,
+        __dirname + "/text/" + file,
+        (err) => {
+          if (err) console.error("Gagal memindahkan file:", err);
+        }
+      );
+    } else {
+      console.log("tidak ada file");
     }
-    try {
-      const filePath = path.join(__dirname, `/${fileName}`);
-      const data = fs.readFileSync(filePath, "utf8");
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    }
-    rl.close();
-  });
+  }
+
+  rl.close();
 };
 
 module.exports = app;

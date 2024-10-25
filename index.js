@@ -14,6 +14,9 @@ switch (command) {
   case "read-file":
     app.readFile();
     break;
+  case "ext-sorter":
+    app.extSorter();
+    break;
 
   default:
     throw Error("Invalid command");
