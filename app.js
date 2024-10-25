@@ -22,12 +22,14 @@ app.makeFolder = () => {
 };
 
 app.makeFile = () => {
-  rl.question("Masukan Nama File : ", (fileName) => {
-    rl.question("Masukan Nama Extensi : ", (ExtName) => {
-      fs.writeFile(__dirname + `/${fileName}.${ExtName}`, "", () => {
-        console.log("Berhasil membuat file baru");
+  rl.question("Masukan nama folder yang sudah tersedia : ", (folderName) => {
+    rl.question("Masukan Nama File : ", (fileName) => {
+      rl.question("Masukan Nama Extensi : ", (ExtName) => {
+        fs.writeFile(folderName + `/${fileName}.${ExtName}`, "", () => {
+          console.log("Berhasil membuat file baru");
+        });
+        rl.close();
       });
-      rl.close();
     });
   });
 };
